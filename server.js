@@ -5,6 +5,6 @@ const apiServer = require('./src/app');
 
 const httpServer = http.createServer(apiServer);
 
-httpServer.createServer(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

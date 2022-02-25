@@ -6,6 +6,10 @@
   "repository": "https://github.com/PrinceNarteh/role-base-express-server.git",
   "author": "Prince Narteh <prinarteh@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.0",
