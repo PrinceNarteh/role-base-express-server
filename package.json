@@ -1,0 +1,9 @@
+{
+  "name": "role-base-express-server",
+  "version": "1.0.0",
+  "description": "Express server with role base authentication and authorization",
+  "main": "server.js",
+  "repository": "https://github.com/PrinceNarteh/role-base-express-server.git",
+  "author": "Prince Narteh <prinarteh@gmail.com>",
+  "license": "MIT"
+}
