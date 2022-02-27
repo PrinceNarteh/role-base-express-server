@@ -3,10 +3,16 @@ import AppError from '../utils/appError';
 
 export async function connect() {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/blog');
-    console.log(`🌍 Database connected successfully.`);
+    const { dbUri } = process.env;
+    console.log(dbUri);
+    if (dbUri) {
+      await mongoose.connect(dbUri);
+      console.log(`🌍 Database connected successfully.`);
+    } else {
+      throw new AppError('Provide database connection URI', 500);
+    }
   } catch (err: any) {
-    throw new AppError('Could not connect to database', 500);
+    throw new AppError(err.message, 500);
   }
 }
 

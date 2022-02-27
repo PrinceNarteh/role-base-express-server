@@ -1,4 +1,7 @@
+import { config } from 'dotenv';
 import { createServer } from 'http';
+
+config();
 const PORT = process.env.PORT || 4000;
 
 import apiServer from './app';
