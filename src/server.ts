@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 const PORT = process.env.PORT || 4000;
 
-import apiServer from './src/app';
+import apiServer from './app';
 
 const httpServer = createServer(apiServer);
 
