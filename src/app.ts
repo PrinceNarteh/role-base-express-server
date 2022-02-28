@@ -4,6 +4,7 @@ import cors, { CorsOptions } from 'cors';
 import morgan from 'morgan';
 
 import AppError from './utils/appError';
+import rootRouter from './routes/root.router';
 
 // instanciate express app
 const app = express();
@@ -35,10 +36,15 @@ app.use(express.json());
 // serve static files
 app.use(express.static(path.join(__dirname, '/public')));
 
+// checks if API is working
 app.get('/health-check', (req: Request, res: Response) => {
   res.send('Server up and running');
 });
 
+// routes
+app.use('/api', rootRouter);
+
+// Not Found Handler
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   throw new AppError(`Can't find ${req.originalUrl} on this server.`, 404);
 });
