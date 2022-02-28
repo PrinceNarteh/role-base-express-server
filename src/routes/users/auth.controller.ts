@@ -3,6 +3,10 @@ import { Request, Response } from 'express';
 import AppError from '../../utils/appError';
 import { registerValidator } from '../../helpers/validation';
 import User from '../../models/user.model';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from '../../utils/generateToken';
 
 export async function register(req: Request, res: Response) {
   try {
@@ -20,7 +24,15 @@ export async function register(req: Request, res: Response) {
       throw new AppError('Username is already taken.', 400);
     }
 
+    // create user in the database
     const user = await User.create(data);
+
+    // generate tokens
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    // return tokens
+    return { accessToken, refreshToken };
   } catch (error: any) {
     throw new AppError(error.message, 400);
   }
