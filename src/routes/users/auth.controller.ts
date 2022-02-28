@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import AppError from '../../utils/appError';
-import { registerValidator } from '../../helpers/validation';
+import { loginValidator, registerValidator } from '../../helpers/validation';
 import User from '../../models/user.model';
 import {
   generateAccessToken,
@@ -10,6 +10,7 @@ import {
 
 export async function register(req: Request, res: Response) {
   try {
+    // validates incoming data
     const data = await registerValidator.validateAsync(req.body);
 
     // check if email already exist
@@ -32,7 +33,41 @@ export async function register(req: Request, res: Response) {
     const refreshToken = generateRefreshToken(user._id);
 
     // return tokens
-    return { accessToken, refreshToken };
+    res.status(201).json({ accessToken, refreshToken });
+  } catch (error: any) {
+    throw new AppError(error.message, 400);
+  }
+}
+
+export async function login(req: Request, res: Response) {
+  try {
+    // validates incoming data
+    const data = await loginValidator.validateAsync(req.body);
+
+    // check if user with the email or password exists
+    let user = await User.findOne({
+      $or: [
+        { email: data.emailOrUsername },
+        { username: data.emailOrUsername },
+      ],
+    });
+
+    // if user not found throw an error
+    if (!user) {
+      throw new AppError('Invalid credentials', 400);
+    }
+
+    // if user check if password is correct
+    if (user && !(await user.comparePassword(user.password))) {
+      throw new AppError('Invalid credentials', 400);
+    }
+
+    // generate tokens
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    // return tokens
+    res.status(200).json({ accessToken, refreshToken });
   } catch (error: any) {
     throw new AppError(error.message, 400);
   }
