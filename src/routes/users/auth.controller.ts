@@ -11,7 +11,7 @@ import {
 export async function register(req: Request, res: Response) {
   try {
     // validates incoming data
-    const data = await registerValidator.validateAsync(req.body);
+    const data = await registerValidator.parseAsync(req.body);
 
     // check if email already exist
     const emailExists = await User.findOne({ email: data.email });
@@ -42,7 +42,7 @@ export async function register(req: Request, res: Response) {
 export async function login(req: Request, res: Response) {
   try {
     // validates incoming data
-    const data = await loginValidator.validateAsync(req.body);
+    const data = await loginValidator.parseAsync(req.body);
 
     // check if user with the email or password exists
     let user = await User.findOne({
