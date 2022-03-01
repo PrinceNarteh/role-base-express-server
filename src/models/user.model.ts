@@ -1,7 +1,21 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Model, Document } from 'mongoose';
 import { hash, compare } from 'bcryptjs';
 
-const userSchema = new Schema({
+interface IUser {
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface IUserDocument extends IUser, Document {
+  comparePassword: (password: string) => Promise<boolean>;
+}
+
+interface IUserModel extends Model<IUserDocument> {
+  findByUsername: (username: string) => Promise<IUserDocument>;
+}
+
+const userSchema: Schema<IUserDocument> = new Schema({
   username: {
     type: String,
     required: true,
@@ -20,16 +34,18 @@ const userSchema = new Schema({
   },
 });
 
-userSchema.pre('save', (next) => {
+userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await hash(this.password, 12);
   }
   next();
 });
 
-userSchema.static.comparePassword = async function (password): boolean {
+userSchema.methods.comparePassword = async function (
+  password: string
+): Promise<boolean> {
   return await compare(password, this.password);
 };
 
-const User = model('User', userSchema);
+const User = model<IUserDocument, IUserModel>('User', userSchema);
 export default User;

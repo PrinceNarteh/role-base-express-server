@@ -58,7 +58,7 @@ export async function login(req: Request, res: Response) {
     }
 
     // if user check if password is correct
-    if (user && !(await user.comparePassword(user.password))) {
+    if (user && !(await user.comparePassword(data.password))) {
       throw new AppError('Invalid credentials', 400);
     }
 
