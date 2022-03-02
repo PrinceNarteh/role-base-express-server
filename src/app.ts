@@ -1,10 +1,11 @@
-import express, { Request, Response, NextFunction } from 'express';
-import path from 'path';
-import cors, { CorsOptions } from 'cors';
+import cors from 'cors';
+import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
+import path from 'path';
 
-import AppError from './utils/appError';
+import { corsOptions } from './config/corsOptions';
 import rootRouter from './routes/root.router';
+import AppError from './utils/appError';
 
 // instanciate express app
 const app = express();
@@ -13,17 +14,6 @@ const app = express();
 app.use(morgan('dev'));
 
 // Cross Site Resource Sharing
-const whitelist = ['http://localhost:3000'];
-const corsOptions: CorsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || (origin && whitelist.indexOf(origin) !== -1)) {
-      callback(null, true);
-    } else {
-      callback(new AppError('Not allowed by CORS', 400));
-    }
-  },
-  optionsSuccessStatus: 200,
-};
 app.use(cors(corsOptions));
 
 // built-in middleware for handling urlencoded data

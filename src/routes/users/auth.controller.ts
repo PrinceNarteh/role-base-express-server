@@ -11,7 +11,7 @@ import {
 export async function register(req: Request, res: Response) {
   try {
     // validates incoming data
-    const data = await registerValidator.parseAsync(req.body);
+    const data = registerValidator.parse(req.body);
 
     // check if email already exist
     const emailExists = await User.findOne({ email: data.email });
