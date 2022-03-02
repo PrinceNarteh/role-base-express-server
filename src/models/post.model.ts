@@ -12,27 +12,32 @@ interface IPostModel extends Model<IPostDocument> {
   searchByTitle: (search: string) => Promise<IPostDocument[]>;
 }
 
-const postSchema: Schema<IPostDocument> = new Schema({
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const postSchema: Schema<IPostDocument> = new Schema(
+  {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+      minlength: [3, 'Minimun character for the title is three(3) characters'],
+    },
+    content: {
+      type: String,
+      required: true,
+      minlength: [10, 'Minimun character for the title is ten(10) characters'],
+    },
+    published: {
+      type: Boolean,
+      default: false,
+    },
   },
-  title: {
-    type: String,
-    required: true,
-    minlength: [3, 'Minimun character for the title is three(3) characters'],
-  },
-  content: {
-    type: String,
-    required: true,
-    minlength: [10, 'Minimun character for the title is ten(10) characters'],
-  },
-  published: {
-    type: Boolean,
-    default: false,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 postSchema.statics.searchByTitle = async function (search: string) {
   return this.find({ $text: { $search: search } });
