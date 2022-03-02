@@ -5,6 +5,7 @@ interface IUser {
   username: string;
   email: string;
   password: string;
+  refreshToken?: string;
 }
 
 interface IUserDocument extends IUser, Document {
@@ -31,6 +32,10 @@ const userSchema: Schema<IUserDocument> = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  refreshToken: {
+    type: String,
+    default: null,
   },
 });
 

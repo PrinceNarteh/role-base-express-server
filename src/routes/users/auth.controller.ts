@@ -26,14 +26,21 @@ export async function register(req: Request, res: Response) {
     }
 
     // create user in the database
-    const user = await User.create(data);
+    const user = new User(data);
 
     // generate tokens
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
+    // storing refreshToken
+    user.refreshToken = refreshToken;
+
     // return tokens
-    res.status(201).json({ accessToken, refreshToken });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 3600 * 1000,
+    });
+    res.status(201).json({ accessToken });
   } catch (error: any) {
     throw new AppError(error.message, 400);
   }
