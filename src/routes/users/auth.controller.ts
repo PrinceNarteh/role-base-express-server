@@ -91,19 +91,39 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   res.status(201).json({ accessToken });
 });
 
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const cookies = req.cookies;
+  if (!cookies?.refreshToken) return res.sendStatus(204); // No content
+
+  // finding user with this cookie
+  const { refreshToken } = cookies;
+  const user = await User.findOne({ refreshToken });
+  if (!user) {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      maxAge: 24 * 3600 * 1000,
+    });
+    return res.sendStatus(204);
+  }
+
+  user.refreshToken = null;
+  await user.save();
+});
+
 export const refreshTokenHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const cookies = req.cookies;
     if (!cookies?.refreshToken) return res.sendStatus(401);
 
-    const token = cookies.refreshToken;
-    const refreshTokenSecret = process.env.refreshTokenSecret || '';
-    const decoded = <JwtPayload>verify(token, refreshTokenSecret);
-    if (!decoded) return res.sendStatus(403);
+    // finding user with this cookie
+    const { refreshToken } = cookies;
+    const user = await User.findOne({ refreshToken });
+    if (!user) return res.sendStatus(403); // Forbidden
 
-    const user = await User.findById(decoded.userId);
-    if (!user || String(user._id) !== String(decoded.userId)) {
-      return res.sendStatus(403); // Forbidden
+    const refreshTokenSecret = process.env.refreshTokenSecret || '';
+    const decoded = <JwtPayload>verify(refreshToken, refreshTokenSecret);
+    if (!decoded || String(user._id) !== String(decoded.userId)) {
+      return res.sendStatus(403);
     }
 
     const accessToken = generateAccessToken(user._id);
