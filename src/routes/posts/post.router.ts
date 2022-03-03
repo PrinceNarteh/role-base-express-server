@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { verifyJWT } from '../../middleware/verifyJWT';
 import {
   createPost,
   deletePost,
@@ -9,7 +10,7 @@ import {
 
 const postRouter = Router();
 
-postRouter.route('/').get(getAllPosts).post(createPost);
+postRouter.route('/').get(getAllPosts).post(verifyJWT, createPost);
 postRouter.route('/:postId').get(getPost).patch(updatePost).delete(deletePost);
 
 export default postRouter;
