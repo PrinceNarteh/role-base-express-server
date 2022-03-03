@@ -5,6 +5,7 @@ interface IUser {
   username: string;
   email: string;
   password: string;
+  posts: Schema.Types.ObjectId[];
   refreshToken?: string;
 }
 
@@ -34,6 +35,12 @@ const userSchema: Schema<IUserDocument> = new Schema({
     type: String,
     required: true,
   },
+  posts: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+    },
+  ],
   refreshToken: {
     type: String,
     default: null,

@@ -8,6 +8,6 @@ export const generateAccessToken = (userId: string) => {
 
 export const generateRefreshToken = (userId: string) => {
   return sign({ userId }, process.env.refreshTokenSecret!, {
-    expiresIn: '7d',
+    expiresIn: '1d',
   });
 };

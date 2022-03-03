@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import AppError from '../../utils/appError';
-import { loginValidator, registerValidator } from '../../helpers/validation';
+import { loginValidator, registerValidator } from '../../utils/validation';
 import User from '../../models/user.model';
 import {
   generateAccessToken,

@@ -1,6 +1,6 @@
 import { Schema, Document, Model, model } from 'mongoose';
 
-interface IPost {
+export interface IPost {
   author: Schema.Types.ObjectId;
   title: string;
   content: string;
@@ -43,4 +43,5 @@ postSchema.statics.searchByTitle = async function (search: string) {
   return this.find({ $text: { $search: search } });
 };
 
-export default model<IPostDocument, IPostModel>('Post', postSchema);
+const Post = model<IPostDocument, IPostModel>('Post', postSchema);
+export default Post;

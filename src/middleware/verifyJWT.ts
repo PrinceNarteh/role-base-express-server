@@ -11,7 +11,8 @@ export const verifyJWT = async (
     if (!authHeader) return res.sendStatus(401);
     const token = authHeader.split(' ')[1];
 
-    const decoded = <any>verify(token, process.env.accessTokenSecret!);
+    const accessTokenSecret = process.env.accessTokenSecret || '';
+    const decoded = <any>verify(token, accessTokenSecret);
     req.userId = decoded.userId;
     next();
   } catch (error: any) {
