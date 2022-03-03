@@ -43,6 +43,25 @@ export const createPostValidator = z.object({
     }),
 });
 
+export const updatePostValidator = z.object({
+  title: z
+    .string({
+      required_error: 'Title of the a post is required.',
+    })
+    .min(3, {
+      message: 'Title of a post cannot be less than three(3) characters.',
+    })
+    .optional(),
+  content: z
+    .string({
+      required_error: 'Content of the a post is required.',
+    })
+    .min(10, {
+      message: 'Content of a post cannot be less than ten(10) characters.',
+    })
+    .optional(),
+});
+
 export const validationError = (data: ZodError) => {
   return data.errors.map((error) => error.message);
 };
