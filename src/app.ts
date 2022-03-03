@@ -2,7 +2,9 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
+// imports
 import { corsOptions } from './config/corsOptions';
 import rootRouter from './routes/root.router';
 import AppError from './utils/appError';
@@ -22,6 +24,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // built-in middleware for json
 app.use(express.json());
+
+// middleware for cookie
+app.use(cookieParser());
 
 // serve static files
 app.use(express.static(path.join(__dirname, '/public')));

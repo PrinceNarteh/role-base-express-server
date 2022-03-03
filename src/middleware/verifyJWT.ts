@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
+interface JwtPayload {
+  userId: string;
+  iat: number;
+  exp: number;
+}
+
 export const verifyJWT = async (
   req: Request,
   res: Response,
@@ -12,7 +18,7 @@ export const verifyJWT = async (
     const token = authHeader.split(' ')[1];
 
     const accessTokenSecret = process.env.accessTokenSecret || '';
-    const decoded = <any>verify(token, accessTokenSecret);
+    const decoded = <JwtPayload>verify(token, accessTokenSecret);
     req.userId = decoded.userId;
     next();
   } catch (error: any) {
