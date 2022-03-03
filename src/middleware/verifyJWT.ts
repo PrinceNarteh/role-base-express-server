@@ -1,12 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
-interface RequestWithUserId extends Request {
-  userId: string;
-}
-
 export const verifyJWT = async (
-  req: RequestWithUserId,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

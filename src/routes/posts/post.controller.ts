@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { asyncHandler } from '../../utils/asyncHandler';
 
 export const getAllPosts = asyncHandler(async (req: Request, res: Response) => {
@@ -10,6 +10,7 @@ export const getPost = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const createPost = asyncHandler(async (req: Request, res: Response) => {
+  console.log(req.userId);
   return res.status(201).json({ status: 'success', data: 'Post Created' });
 });
 

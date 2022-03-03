@@ -21,6 +21,7 @@ const userSchema: Schema<IUserDocument> = new Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
     minlength: [3, 'Username should be at least three characters long'],
   },
   email: {

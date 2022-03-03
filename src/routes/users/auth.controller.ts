@@ -35,6 +35,9 @@ export async function register(req: Request, res: Response) {
     // storing refreshToken
     user.refreshToken = refreshToken;
 
+    // saving user to database
+    await user.save();
+
     // return tokens
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -73,8 +76,19 @@ export async function login(req: Request, res: Response) {
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
+    // storing refreshToken
+    await User.findByIdAndUpdate(user._id, {
+      $set: { refreshToken },
+    });
+
     // return tokens
-    res.status(200).json({ accessToken, refreshToken });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 3600 * 1000,
+    });
+
+    // send accessToken
+    res.status(201).json({ accessToken });
   } catch (error: any) {
     throw new AppError(error.message, 400);
   }
