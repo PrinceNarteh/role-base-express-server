@@ -8,12 +8,17 @@ import cookieParser from 'cookie-parser';
 import { corsOptions } from './config/corsOptions';
 import rootRouter from './routes/root.router';
 import AppError from './utils/appError';
+import { credentials } from './middleware/credentials';
 
 // instanciate express app
 const app = express();
 
 // middleware
 app.use(morgan('dev'));
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
 
 // Cross Site Resource Sharing
 app.use(cors(corsOptions));

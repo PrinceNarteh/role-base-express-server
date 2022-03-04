@@ -106,8 +106,15 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     return res.sendStatus(204);
   }
 
-  user.refreshToken = null;
+  // clearing the refreshToken from user's info
+  user.refreshToken = '';
   await user.save();
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    maxAge: 24 * 3600 * 1000,
+  });
+  res.sendStatus(204);
 });
 
 export const refreshTokenHandler = asyncHandler(
