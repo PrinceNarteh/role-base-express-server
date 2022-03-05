@@ -16,6 +16,15 @@ interface JwtPayload {
   exp: number;
 }
 
+function setCookie(res: Response, refreshToken: string) {
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    maxAge: 24 * 3600 * 1000,
+  });
+}
+
 export const register = asyncHandler(async (req: Request, res: Response) => {
   // validates incoming data
   const data = registerValidator.parse(req.body);
@@ -46,10 +55,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   await user.save();
 
   // return tokens
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: 24 * 3600 * 1000,
-  });
+  setCookie(res, refreshToken);
   res.status(201).json({ accessToken });
 });
 
@@ -82,10 +88,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   });
 
   // return tokens
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: 24 * 3600 * 1000,
-  });
+  setCookie(res, refreshToken);
 
   // send accessToken
   res.status(201).json({ accessToken });
@@ -101,7 +104,8 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   if (!user) {
     res.clearCookie('refreshToken', {
       httpOnly: true,
-      maxAge: 24 * 3600 * 1000,
+      secure: true,
+      sameSite: 'none',
     });
     return res.sendStatus(204);
   }
@@ -112,7 +116,8 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
-    maxAge: 24 * 3600 * 1000,
+    secure: true,
+    sameSite: 'none',
   });
   res.sendStatus(204);
 });

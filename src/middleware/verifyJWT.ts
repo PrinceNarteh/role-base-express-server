@@ -2,7 +2,10 @@ import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 
 interface JwtPayload {
-  userId: string;
+  user: {
+    userId: string;
+    roles: number[];
+  };
   iat: number;
   exp: number;
 }
@@ -13,13 +16,13 @@ export const verifyJWT = async (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers['authorization'];
-    if (!authHeader) return res.sendStatus(401);
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) return res.sendStatus(401);
     const token = authHeader.split(' ')[1];
 
     const accessTokenSecret = process.env.accessTokenSecret || '';
-    const decoded = <JwtPayload>verify(token, accessTokenSecret);
-    req.userId = decoded.userId;
+    const { user } = <JwtPayload>verify(token, accessTokenSecret);
+    req.user = user;
     next();
   } catch (error: any) {
     if (error.message === 'jwt expired') {

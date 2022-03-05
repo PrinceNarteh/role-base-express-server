@@ -29,7 +29,7 @@ export const createPost = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // checking if user exists
-  const user = await User.findById(req.userId);
+  const user = await User.findById(req.user.userId);
   if (!user) {
     throw new AppError('User not found', 404);
   }
@@ -66,7 +66,7 @@ export const updatePost = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // checking if the user it the owner of the post
-  if (String(post.author) !== String(req.userId)) {
+  if (String(post.author) !== String(req.user.userId)) {
     throw new AppError('Not allowed to perform this operation', 403);
   }
 
@@ -85,7 +85,7 @@ export const deletePost = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // getting user from the database
-  let user = await User.findById(req.userId);
+  let user = await User.findById(req.user.userId);
 
   // checking if the user it the owner of the post
   if (String(post.author) !== String(user?._id)) {
