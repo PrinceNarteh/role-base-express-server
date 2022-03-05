@@ -138,7 +138,7 @@ export const refreshTokenHandler = asyncHandler(
       return res.sendStatus(403);
     }
 
-    const accessToken = generateAccessToken(user._id);
+    const accessToken = generateAccessToken(user);
     res.json({ accessToken });
   }
 );

@@ -1,13 +1,22 @@
 import { sign } from 'jsonwebtoken';
+import { IUser } from '../models/user.model';
 
-export const generateAccessToken = (userId: string) => {
-  return sign({ userId }, process.env.accessTokenSecret!, {
-    expiresIn: '15m',
-  });
+interface IUserDocument extends IUser {
+  _id: string;
+}
+
+export const generateAccessToken = (user: IUserDocument) => {
+  return sign(
+    { userId: user._id, roles: user.roles },
+    process.env.accessTokenSecret!,
+    {
+      expiresIn: '15m',
+    }
+  );
 };
 
-export const generateRefreshToken = (userId: string) => {
-  return sign({ userId }, process.env.refreshTokenSecret!, {
+export const generateRefreshToken = (user: IUserDocument) => {
+  return sign({ userId: user._id }, process.env.refreshTokenSecret!, {
     expiresIn: '1d',
   });
 };
