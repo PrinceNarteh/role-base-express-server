@@ -83,9 +83,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const refreshToken = generateRefreshToken(user._id);
 
   // storing refreshToken
-  await User.findByIdAndUpdate(user._id, {
-    $set: { refreshToken },
-  });
+  user.refreshToken = refreshToken;
+  await user.save();
 
   // return tokens
   setCookie(res, refreshToken);
