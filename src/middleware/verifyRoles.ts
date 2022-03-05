@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-export const veriftRoles = (...allowedRoles: number[]) => {
+
+export const ROLES_LIST = {
+  Admin: 5051,
+  Editor: 1989,
+  User: 2001,
+};
+
+export const verifyRoles = (...allowedRoles: number[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user.roles) return res.sendStatus(401);
     const rolesArray = [...allowedRoles];
