@@ -16,3 +16,15 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   }
   res.status(200).json({ status: 'success', user });
 });
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.params;
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new AppError(`User with ID ${userId} not found`, 404);
+  }
+  await user.delete();
+  res
+    .status(200)
+    .json({ status: 'success', message: 'User deleted successfully.' });
+});
