@@ -9,6 +9,7 @@ import {
 } from '../../utils/generateToken';
 import { asyncHandler } from '../../utils/asyncHandler';
 import { verify } from 'jsonwebtoken';
+import { ROLES_LIST } from '../../middleware/verifyRoles';
 
 interface JwtPayload {
   userId: string;
@@ -141,3 +142,22 @@ export const refreshTokenHandler = asyncHandler(
     res.json({ accessToken });
   }
 );
+
+export const assignRole = asyncHandler(async (req: Request, res: Response) => {
+  const { userId, role }: { userId: string; role: string } = req.body;
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(`User with ID ${userId} not found`, 404);
+  }
+
+  if (role.toLowerCase() === 'admin') {
+    user.roles.Admin = ROLES_LIST.Admin;
+  } else if (role.toLowerCase() === 'editor') {
+    user.roles.Editor === ROLES_LIST.Editor;
+  } else {
+    throw new AppError('Role not found', 400);
+  }
+
+  await user.save();
+  res.status(200).json({ status: 'success', user });
+});
