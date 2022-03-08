@@ -21,9 +21,8 @@ export const verifyJWT = async (
     const token = authHeader.split(' ')[1];
 
     const accessTokenSecret = process.env.accessTokenSecret || '';
-    const user = <JwtPayload>verify(token, accessTokenSecret);
-    console.log(user);
-    // req.user = user;
+    const decoded = <JwtPayload>verify(token, accessTokenSecret);
+    req.user = decoded.user;
     next();
   } catch (error: any) {
     if (error.message === 'jwt expired') {
