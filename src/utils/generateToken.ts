@@ -1,13 +1,9 @@
 import { sign } from 'jsonwebtoken';
-import { IUser } from '../models/user.model';
-
-interface IUserDocument extends IUser {
-  _id: string;
-}
+import { IUserDocument } from '../models/user.model';
 
 export const generateAccessToken = (user: IUserDocument) => {
   return sign(
-    { userId: user._id, roles: user.roles },
+    { user: { userId: user._id, roles: user.roles } },
     process.env.accessTokenSecret!,
     {
       expiresIn: '15m',

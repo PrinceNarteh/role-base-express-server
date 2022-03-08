@@ -14,7 +14,7 @@ export interface IUser {
   refreshToken?: string;
 }
 
-interface IUserDocument extends IUser, Document {
+export interface IUserDocument extends IUser, Document {
   comparePassword: (password: string) => Promise<boolean>;
 }
 

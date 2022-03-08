@@ -46,8 +46,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = new User(data);
 
   // generate tokens
-  const accessToken = generateAccessToken(user._id);
-  const refreshToken = generateRefreshToken(user._id);
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
 
   // storing refreshToken
   user.refreshToken = refreshToken;
@@ -80,8 +80,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // generate tokens
-  const accessToken = generateAccessToken(user._id);
-  const refreshToken = generateRefreshToken(user._id);
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
 
   // storing refreshToken
   user.refreshToken = refreshToken;
